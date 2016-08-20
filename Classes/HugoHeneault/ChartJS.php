@@ -1,86 +1,79 @@
 <?php
 
-abstract class ChartJS
-{
+namespace HugoHeneault;
+
+abstract class ChartJS {
     /**
      * @var array chart data
      */
     protected $_datasets = array();
-
     /**
      * @var array chart labels
      */
     protected $_labels = array();
-
     /**
      * The chart type
      * @var string
      */
     protected $_type = '';
-
     /**
      * @var array Specific options for chart
      */
     protected $_options = array();
-
     /**
      * @var string Chartjs canvas' ID
      */
     protected $_id;
-
     /**
      * @var string Canvas width
      */
     protected $_width;
-
     /**
      * @var string Canvas height
      */
     protected $_height;
-
     /**
      * @var array Canvas attributes (class,
      */
     protected $_attributes = array();
-
     /**
      * @var array Default colors
      */
-    protected static $_defaultColors = array('fill' => 'rgba(220,220,220,0.2)', 'stroke' => 'rgba(220,220,220,1)', 'point' => 'rgba(220,220,220,1)', 'pointStroke' => '#fff');
-
-
+    protected static $_defaultColors = array(
+        array('fill' => 'rgba(220,220,220,0.2)','stroke' => 'rgba(220,220,220,1)','point' => 'rgba(220,220,220,1)','pointStroke' => '#fff'),
+        array('fill' => '#f2b21a','stroke' => '#e5801d','point' => '#e5801d','pointStroke' => '#e5801d'),
+        array('fill' => 'rgba(28,116,190,.8)','stroke' => '#1c74be','point' => '#1c74be','pointStroke' => '#1c74be'),
+        array('fill' => 'rgba(212,41,31,.7)','stroke' => '#d4291f','point' => '#d4291f','pointStroke' => '#d4291f'),
+        array('fill' => '#dc693c','stroke' => '#ff0000','point' => '#ff0000','pointStroke' => '#ff0000'),
+        array('fill' => 'rgba(46,204,113,.8)','stroke' => '#2ecc71','point' => '#2ecc71','pointStroke' => '#2ecc71'),
+    );
     /**
      * Add label(s)
      * @param array $labels
      * @param bool $reset
      */
-    public function addLabels(array $labels, $reset = false)
-    {
-        if ($reset) {
+    public function addLabels(array $labels,$reset = false) {
+        if($reset) {
             $this->_labels = array();
         }
 
         $this->_labels = $this->_labels + $labels;
     }
-
     /**
      * Add dataset
      * @param $dataset
      * @param $reset
      */
-    public function addDataset($dataset, $reset)
-    {
-        if ($reset) {
+    public function addDataset($dataset,$reset) {
+        if($reset) {
             $this->_datasets = array();
         }
 
         $this->_datasets += $dataset;
     }
-
-    public function __construct($id = null, $width = '', $height = '', $otherAttributes = array())
-    {
-        if (!$id) {
-            $id = uniqid('chartjs_', true);
+    public function __construct($id = null,$width = '',$height = '',$otherAttributes = array()) {
+        if(!$id) {
+            $id = uniqid('chartjs_',true);
         }
 
         $this->_id = $id;
@@ -88,23 +81,19 @@ abstract class ChartJS
         $this->_height = $height;
 
         // Always save otherAttributes as array
-        if ($otherAttributes && !is_array($otherAttributes)) {
+        if($otherAttributes && !is_array($otherAttributes)) {
             $otherAttributes = array($otherAttributes);
         }
 
         $this->_attributes = $otherAttributes;
     }
-
     /**
      * This method allows to echo ChartJS object and directly renders canvas (instead of using ChartJS->render())
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->renderCanvas();
     }
-
-    public function renderCanvas()
-    {
+    public function renderCanvas() {
         $data = $this->_renderData();
         $options = $this->_renderOptions();
         $height = $this->_renderHeight();
@@ -116,76 +105,65 @@ abstract class ChartJS
 
         return $canvas;
     }
-
     /**
      * Prepare canvas' attributes
      * @return string
      */
-    protected function _renderAttributes()
-    {
+    protected function _renderAttributes() {
         $attributes = '';
 
-        foreach ($this->_attributes as $attribute => $value) {
+        foreach($this->_attributes as $attribute => $value) {
             $attributes .= ' ' . $attribute . '="' . $value . '"';
         }
 
         return $attributes;
     }
-
     /**
      * Prepare width attribute for canvas
      * @return string
      */
-    protected function _renderWidth()
-    {
+    protected function _renderWidth() {
         $width = '';
 
-        if ($this->_width) {
+        if($this->_width) {
             $width = ' width="' . $this->_width . '"';
         }
 
         return $width;
     }
-
     /**
      * Prepare height attribute for canvas
      * @return string
      */
-    protected function _renderHeight()
-    {
+    protected function _renderHeight() {
         $height = '';
 
-        if ($this->_height) {
+        if($this->_height) {
             $height = ' height="' . $this->_height . '"';
         }
 
         return $height;
     }
-
     /**
      * Render custom options for the chart
      * @return string
      */
-    protected function _renderOptions()
-    {
-        if (empty($this->_options)) {
+    protected function _renderOptions() {
+        if(empty($this->_options)) {
             return '';
         }
         return ' data-options=\'' . json_encode($this->_options) . '\'';
     }
-
-
     /**
      * Prepare data (labels and dataset) for the chart
      * @return string
      */
-    protected function _renderData()
-    {
-        $array_data = array('labels' => array(), 'datasets' => array());
+    protected function _renderData() {
+        $array_data = array('labels' => array(),'datasets' => array());
         $i = 0;
-        foreach ($this->_datasets as $line) {
+        foreach($this->_datasets as $line) {
 
-            $this->_completeColors($line['options'], $i);
+            $this->_completeColors($line['options'],$i);
 
             $array_data['datasets'][] = $line['options'] + array('data' => $line['data']);
             $i++;
@@ -195,40 +173,34 @@ abstract class ChartJS
 
         return ' data-data=\'' . json_encode($array_data) . '\'';
     }
-
     /**
      * Set default colors
      * @param array $defaultColors
      */
-    public static function setDefaultColors(array $defaultColors)
-    {
+    public static function setDefaultColors(array $defaultColors) {
         self::$_defaultColors = $defaultColors;
     }
-
     /**
      * @param array $color
      */
-    public static function addDefaultColor(array $color)
-    {
-        if (!empty($color['fill']) && !empty($color['stroke']) && !empty($color['point']) && !empty($color['pointStroke'])) {
+    public static function addDefaultColor(array $color) {
+        if(!empty($color['fill']) && !empty($color['stroke']) && !empty($color['point']) && !empty($color['pointStroke'])) {
             self::$_defaultColors[] = $color;
         } else {
-            trigger_error('Color is missing to add this theme (need fill, stroke, point and pointStroke) : color not added', E_USER_WARNING);
+            trigger_error('Color is missing to add this theme (need fill, stroke, point and pointStroke) : color not added',E_USER_WARNING);
         }
     }
-
-    protected function _completeColors(&$options, &$i)
-    {
-        if (empty(static::$_defaultColors[$i])) {
+    protected function _completeColors(&$options,&$i) {
+        if(empty(static::$_defaultColors[$i])) {
             $i = 0;
         }
         $colors = static::$_defaultColors[$i];
 
-        foreach (static::$_colorsRequired as $name) {
-            if (empty($options[$name])) {
-                $shortName = str_replace('Color', '', $name);
+        foreach(static::$_colorsRequired as $name) {
+            if(empty($options[$name])) {
+                $shortName = str_replace('Color','',$name);
 
-                if (empty($colors[$shortName])) {
+                if(empty($colors[$shortName])) {
                     $shortName = static::$_colorsReplacement[$shortName];
                 }
 
