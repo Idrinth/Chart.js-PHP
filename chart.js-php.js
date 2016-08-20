@@ -1,32 +1,18 @@
-// Will be filled with canvas
-var ChartJSPHP = new Array();
-
-// You must call this function after document.ready
-function loadChartJsPhp() {
-	// Getting all chart.js canvas
-	var elements = document.querySelectorAll("[data-chartjs]");
-
-    console.log(elements);
-
-	// Looping every canvas
-	for (var i in elements)
-	{
-		// Escaping length and item in the loop
-		if (i === 'length' || i === 'item') {
-			continue;
-		}
-		var canvas = elements[i];
-		var id = canvas.id;
-
-		// Getting ctx from canvas
-		var ctx = canvas.getContext('2d');
-
-		// Getting values in data attributes
-		var htmldata = canvas.dataset;
-		var data = JSON.parse(htmldata.data);
-		var type = htmldata.chartjs;
-
-		// Creating chart and saving for later use
-		ChartJSPHP[id] = new Chart(ctx)[type](data);
-	}
+var ChartJSPHP = {
+    charts: { },
+    start: function () {
+        if ( document.readyState !== "interactive" && document.readyState !== "complete" ) {
+            window.setTimeout ( this.start, 25 );
+            return;
+        }
+        // Getting all chart.js canvas
+        var elements = document.querySelectorAll ( "canvas[data-chartjs]" );
+        // Looping every canvas
+        for (var counter = 0; counter < elements.length; counter++)
+        {
+            this.charts[elements[counter].id] = new Chart ( elements[counter].getContext ( '2d' ) )[elements[counter].dataset.chartjs] ( JSON.parse ( elements[counter].dataset.data ) );
+        }
+        delete ChartJSPHP.start;//cleanup
+    }
 };
+ChartJSPHP.start ();
