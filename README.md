@@ -3,10 +3,13 @@ Chart.js-PHP
 
 A PHP wrapper for nnnick/Chart.js
 
-When using a lot of charts in a project, we need to write a lot of code. 
+When using a lot of charts in a project, we need to write a lot of code.
 
 This small PHP wrapper use `data-attributes` to load chart with Chart.js with less code.
 
+[![Code Climate](https://codeclimate.com/github/Idrinth/Chart.js-PHP/badges/gpa.svg)](https://codeclimate.com/github/Idrinth/Chart.js-PHP)
+[![Issue Count](https://codeclimate.com/github/Idrinth/Chart.js-PHP/badges/issue_count.svg)](https://codeclimate.com/github/Idrinth/Chart.js-PHP)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a7ceb2c1de284c749d7a98677b14353d)](https://www.codacy.com/app/Idrinth/Chart-js-PHP?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Idrinth/Chart.js-PHP&amp;utm_campaign=Badge_Grade)
 
 ## Charts implemented
 * Line
@@ -14,79 +17,11 @@ This small PHP wrapper use `data-attributes` to load chart with Chart.js with le
 * Radar
 * Polar Area
 * Pie & Doughnut
-
+* Bubble
 
 ## How to use
-Include Chart.js and chart.js-php.js before the end of your body (change src according to your project)
-```html
-<html>
-  <body>
-    <!-- Your awesome project comes here -->
-    
-    <!-- And here are Chart.js and Chart.js-PHP -->
-    <script src="js/Chart.js"></script>
-    <script src="js/chart.js-php.js"></script>
-  </body>
-</html>
-```
-
-Load ChartJS-PHP classes or use an autoloader
-```php
-require 'class/ChartJS.php';
-require 'class/ChartJS_Line.php';
-```
-
-Then, create your charts using PHP. 
-```php
-$Line = new ChartJS_Line('example', 500, 500);
-$Line->addLine(array(1, 2, 3, 4));
-$Line->addLabels(array('A label', 'Another', 'Another one', 'The last one'));
-
-// Echo your line
-echo $Line;
-?>
-```
-
-Finally, load these charts with a small piece of javascript when your document is ready
-```js
-// Pure JS document.ready
-(function() {
-  loadChartJsPhp();
-})();
-```
-
-## Advanced use (colors, etc)
-Have a look at the wiki (soon)
-
-## Full example
-```php
-<?php
-require 'class/ChartJS.php';
-require 'class/ChartJS_Line.php';
-
-$Line = new ChartJS_Line('example', 500, 500);
-$Line->addLine(array(1, 2, 3, 4));
-$Line->addLabels(array('A label', 'Another', 'Another one', 'The last one'));
-
-?><!DOCTYPE html>
-<html>
-  <head>
-    <title>Chart.js-PHP</title>
-  </head>
-  <body>
-    <?php
-      echo $Line;
-    ?>		
-    <script src="Chart.js"></script>
-    <script src="chart.js-php.js"></script>
-    <script>
-      (function() {
-        loadChartJsPhp();
-      })();
-    </script>
-  </body>
-</html>
-```
+Include Chart.js and chart.js-php.js before the end of your body (change src according to your project) and use the provided PHP-Classes to create your desired chart.
+An example is given in chart.js.php.
 
 ## Contributing
 Do not hesitate to edit or improve my code with bugfix and new functionnalities !
