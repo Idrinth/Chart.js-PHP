@@ -53,7 +53,7 @@ class Attribute implements \Iterator, \ArrayAccess {
      * @param string $offset
      */
     public function offsetExists($offset) {
-        isset($this->attributes[$offset]);
+        return isset($this->attributes[$offset]);
     }
     /**
      *
@@ -66,7 +66,7 @@ class Attribute implements \Iterator, \ArrayAccess {
     /**
      *
      * @param string $offset
-     * @param \HugoHeneault\CHartJS\Models\Attribute $value
+     * @param \HugoHeneault\ChartJS\Models\Attribute $value
      */
     public function offsetSet($offset,$value) {
         if(!($value instanceof \HugoHeneault\ChartJS\Models\Attribute)) {
@@ -76,6 +76,13 @@ class Attribute implements \Iterator, \ArrayAccess {
         if(!in_array($offset,$this->attributeKeys)) {
             $this->attributeKeys[] = $offset;
         }
+    }
+    /**
+     *
+     * @param \HugoHeneault\ChartJS\Models\Attribute $attribute
+     */
+    public function add(\HugoHeneault\ChartJS\Models\Attribute $attribute) {
+        $this->offsetSet($attribute->getName(),$attribute);
     }
     /**
      *

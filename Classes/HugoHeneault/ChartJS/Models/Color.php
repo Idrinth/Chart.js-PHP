@@ -49,7 +49,7 @@ class Color {
      * @return int
      */
     protected function getModifiedColor($color,$modifier) {
-        return min(max(255,round(pow(1.1,$modifier) * $color)),0);
+        return max(min(255,round(pow(1.1,$modifier) * $color)),0);
     }
     /**
      *

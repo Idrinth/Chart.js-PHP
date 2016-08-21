@@ -26,7 +26,7 @@ class Dataset implements \JsonSerializable, \Iterator, \ArrayAccess {
      * @return array
      */
     public function jsonSerialize() {
-        $numDatasets = ceil(count($this->datasets) / 3);
+        $numDatasets = ceil((count($this->datasets) + 1) / 3);
         $step = max(0,floor(256 / $numDatasets - 1));
         $count = 0;
         for($red = 0; $red < $numDatasets; $red++) {
