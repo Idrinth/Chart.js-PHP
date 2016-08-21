@@ -1,6 +1,6 @@
 <?php
 
-namespace HugoGeneault\ChartJS;
+namespace HugoHeneault\ChartJS;
 
 class Doughnut extends \HugoGeneault\ChartJS\Pie {
     protected $_type = 'Doughnut';
