@@ -2,7 +2,7 @@ var ChartJSPHP = {
     charts: { },
     start: function () {
         if ( document.readyState !== "interactive" && document.readyState !== "complete" ) {
-            window.setTimeout ( this.start, 25 );
+            window.setTimeout ( ChartJSPHP.start, 25 );
             return;
         }
         // Getting all chart.js canvas
@@ -10,7 +10,7 @@ var ChartJSPHP = {
         // Looping every canvas
         for (var counter = 0; counter < elements.length; counter++)
         {
-            this.charts[elements[counter].id] = new Chart ( elements[counter].getContext ( '2d' ) )[elements[counter].dataset.chartjs] ( JSON.parse ( elements[counter].dataset.data ) );
+            ChartJSPHP.charts[elements[counter].id] = new Chart ( elements[counter].getContext ( '2d' ), JSON.parse ( elements[counter].dataset.chartjs ) );
         }
         delete ChartJSPHP.start;//cleanup
     }

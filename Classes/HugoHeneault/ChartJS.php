@@ -2,210 +2,39 @@
 
 namespace HugoHeneault;
 
-abstract class ChartJS {
+class ChartJS {
     /**
-     * @var array chart data
+     * @var ChartJS\Lists\Attribute Canvas attributes (class,
      */
-    protected $_datasets = array();
+    protected $attributes;
     /**
-     * @var array chart labels
+     *
+     * @param \HugoHeneault\ChartJS\Lists\Dataset $datasets
+     * @param string[] $labels
+     * @param array $options
      */
-    protected $_labels = array();
-    /**
-     * The chart type
-     * @var string
-     */
-    protected $_type = '';
-    /**
-     * @var array Specific options for chart
-     */
-    protected $_options = array();
-    /**
-     * @var string Chartjs canvas' ID
-     */
-    protected $_id;
-    /**
-     * @var string Canvas width
-     */
-    protected $_width;
-    /**
-     * @var string Canvas height
-     */
-    protected $_height;
-    /**
-     * @var array Canvas attributes (class,
-     */
-    protected $_attributes = array();
-    /**
-     * @var array Default colors
-     */
-    protected static $_defaultColors = array(
-        array('fill' => 'rgba(220,220,220,0.2)','stroke' => 'rgba(220,220,220,1)','point' => 'rgba(220,220,220,1)','pointStroke' => '#fff'),
-        array('fill' => '#f2b21a','stroke' => '#e5801d','point' => '#e5801d','pointStroke' => '#e5801d'),
-        array('fill' => 'rgba(28,116,190,.8)','stroke' => '#1c74be','point' => '#1c74be','pointStroke' => '#1c74be'),
-        array('fill' => 'rgba(212,41,31,.7)','stroke' => '#d4291f','point' => '#d4291f','pointStroke' => '#d4291f'),
-        array('fill' => '#dc693c','stroke' => '#ff0000','point' => '#ff0000','pointStroke' => '#ff0000'),
-        array('fill' => 'rgba(46,204,113,.8)','stroke' => '#2ecc71','point' => '#2ecc71','pointStroke' => '#2ecc71'),
-    );
-    /**
-     * Add label(s)
-     * @param array $labels
-     * @param bool $reset
-     */
-    public function addLabels(array $labels,$reset = false) {
-        if($reset) {
-            $this->_labels = array();
-        }
-
-        $this->_labels = $this->_labels + $labels;
+    public function __construct(\HugoHeneault\ChartJS\Lists\Dataset $datasets,array $labels,$options = null) {
+        $this->attributes = new ChartJS\Lists\Attribute();
+        $this->attributes->offsetSet(
+                "data-chartjs",new ChartJS\Models\Attribute(
+                "data-chartjs",json_encode(
+                        array('type' => $datasets->getType(),'options' => $options?$options:new \stdClass(),'data' => array("datasets" => $datasets,"labels" => $labels)),JSON_NUMERIC_CHECK
+                )
+                )
+        );
     }
     /**
-     * Add dataset
-     * @param $dataset
-     * @param $reset
+     *
+     * @param \HugoHeneault\ChartJS\Models\Attribute $attribute
      */
-    public function addDataset($dataset,$reset) {
-        if($reset) {
-            $this->_datasets = array();
-        }
-
-        $this->_datasets += $dataset;
-    }
-    public function __construct($id = null,$width = '',$height = '',$otherAttributes = array()) {
-        if(!$id) {
-            $id = uniqid('chartjs_',true);
-        }
-
-        $this->_id = $id;
-        $this->_width = $width;
-        $this->_height = $height;
-
-        // Always save otherAttributes as array
-        if($otherAttributes && !is_array($otherAttributes)) {
-            $otherAttributes = array($otherAttributes);
-        }
-
-        $this->_attributes = $otherAttributes;
+    public function addAttribute(ChartJS\Models\Attribute $attribute) {
+        $this->attributes->offsetSet($attribute->getName(),$attribute);
     }
     /**
-     * This method allows to echo ChartJS object and directly renders canvas (instead of using ChartJS->render())
+     *
+     * @return string
      */
     public function __toString() {
-        return $this->renderCanvas();
-    }
-    public function renderCanvas() {
-        $data = $this->_renderData();
-        $options = $this->_renderOptions();
-        $height = $this->_renderHeight();
-        $width = $this->_renderWidth();
-
-        $attributes = $this->_renderAttributes();
-
-        $canvas = '<canvas id="' . $this->_id . '" data-chartjs="' . $this->_type . '"' . $height . $width . $attributes . $data . $options . '></canvas>';
-
-        return $canvas;
-    }
-    /**
-     * Prepare canvas' attributes
-     * @return string
-     */
-    protected function _renderAttributes() {
-        $attributes = '';
-
-        foreach($this->_attributes as $attribute => $value) {
-            $attributes .= ' ' . $attribute . '="' . $value . '"';
-        }
-
-        return $attributes;
-    }
-    /**
-     * Prepare width attribute for canvas
-     * @return string
-     */
-    protected function _renderWidth() {
-        $width = '';
-
-        if($this->_width) {
-            $width = ' width="' . $this->_width . '"';
-        }
-
-        return $width;
-    }
-    /**
-     * Prepare height attribute for canvas
-     * @return string
-     */
-    protected function _renderHeight() {
-        $height = '';
-
-        if($this->_height) {
-            $height = ' height="' . $this->_height . '"';
-        }
-
-        return $height;
-    }
-    /**
-     * Render custom options for the chart
-     * @return string
-     */
-    protected function _renderOptions() {
-        if(empty($this->_options)) {
-            return '';
-        }
-        return ' data-options=\'' . json_encode($this->_options) . '\'';
-    }
-    /**
-     * Prepare data (labels and dataset) for the chart
-     * @return string
-     */
-    protected function _renderData() {
-        $array_data = array('labels' => array(),'datasets' => array());
-        $i = 0;
-        foreach($this->_datasets as $line) {
-
-            $this->_completeColors($line['options'],$i);
-
-            $array_data['datasets'][] = $line['options'] + array('data' => $line['data']);
-            $i++;
-        }
-
-        $array_data['labels'] = $this->_labels;
-
-        return ' data-data=\'' . json_encode($array_data) . '\'';
-    }
-    /**
-     * Set default colors
-     * @param array $defaultColors
-     */
-    public static function setDefaultColors(array $defaultColors) {
-        self::$_defaultColors = $defaultColors;
-    }
-    /**
-     * @param array $color
-     */
-    public static function addDefaultColor(array $color) {
-        if(!empty($color['fill']) && !empty($color['stroke']) && !empty($color['point']) && !empty($color['pointStroke'])) {
-            self::$_defaultColors[] = $color;
-        } else {
-            trigger_error('Color is missing to add this theme (need fill, stroke, point and pointStroke) : color not added',E_USER_WARNING);
-        }
-    }
-    protected function _completeColors(&$options,&$i) {
-        if(empty(static::$_defaultColors[$i])) {
-            $i = 0;
-        }
-        $colors = static::$_defaultColors[$i];
-
-        foreach(static::$_colorsRequired as $name) {
-            if(empty($options[$name])) {
-                $shortName = str_replace('Color','',$name);
-
-                if(empty($colors[$shortName])) {
-                    $shortName = static::$_colorsReplacement[$shortName];
-                }
-
-                $options[$name] = $colors[$shortName];
-            }
-        }
+        return '<canvas id="' . uniqid('chartjs_',true) . '"' . $this->attributes->__toString() . '></canvas>';
     }
 }

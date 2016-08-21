@@ -2,47 +2,10 @@
 function __autoload($class) {
     require_once __DIR__ . DIRECTORY_SEPARATOR . 'Classes' . DIRECTORY_SEPARATOR . str_replace('\\',DIRECTORY_SEPARATOR,$class) . '.php';
 }
-$array_values = array(array(65,59,80,81,56,55,40),array(28,48,40,19,86,27,90));
-$array_labels = array("January","February","March","April","May","June","July");
-
-$Line = new HugoGeneault\ChartJS\Line('example_line',500,500);
-$Line->addLine($array_values[0]);
-$Line->addLine($array_values[1]);
-$Line->addLabels($array_labels);
-
-$Bar = new HugoGeneault\ChartJS\Bar('example_bar',500,500);
-$Bar->addBars($array_values[0]);
-$Bar->addBars($array_values[1]);
-$Bar->addLabels($array_labels);
-
-$Radar = new HugoGeneault\ChartJS\Radar('example_radar',500,500);
-$Radar->addRadar($array_values[0]);
-$Radar->addRadar($array_values[1]);
-$Radar->addLabels($array_labels);
-
-$PolarArea = new HugoGeneault\ChartJS\PolarArea('example_polararea',500,500);
-$PolarArea->addSegment(65);
-$PolarArea->addSegment(59);
-$PolarArea->addSegment(80);
-$PolarArea->addSegment(81);
-$PolarArea->addSegment(56);
-$PolarArea->addSegment(55);
-$PolarArea->addSegment(40);
-$PolarArea->addLabels($array_labels);
-
-$Pie = new HugoGeneault\ChartJS\Pie('example_pie',500,500);
-$Pie->addPart(65);
-$Pie->addPart(59);
-$Pie->addPart(80);
-$Pie->addPart(81);
-$Pie->addLabels($array_labels);
-
-$Doughnut = new HugoGeneault\ChartJS\Doughnut('example_doughnut',500,500);
-$Doughnut->addPart(65);
-$Doughnut->addPart(59);
-$Doughnut->addPart(80);
-$Doughnut->addPart(81);
-$Doughnut->addLabels($array_labels);
+ini_set("display_errors",1);
+error_reporting(-1);
+$values = array(array(65,59,80,81,56,55,40),array(28,48,40,19,86,27,90));
+$labels = array("January","February","March","April","May","June","July");
 ?><!DOCTYPE html>
 <html>
     <head>
@@ -51,34 +14,35 @@ $Doughnut->addLabels($array_labels);
     <body>
         <h1>Line</h1>
         <?php
-        echo $Line;
+        echo HugoHeneault\ChartJS\SimpleFactory::createLine($values,$labels,250,250);
         ?>
 
         <h1>Bar</h1>
         <?php
-        echo $Bar
+        echo HugoHeneault\ChartJS\SimpleFactory::createBar($values,$labels,250,250);
         ?>
 
         <h1>Radar</h1>
         <?php
-        echo $Radar
+        echo HugoHeneault\ChartJS\SimpleFactory::createRadar($values,$labels,250,250);
         ?>
 
         <h1>Polar Area</h1>
         <?php
-        echo $PolarArea
+        echo HugoHeneault\ChartJS\SimpleFactory::createPolarArea($values,$labels,250,250);
         ?>
 
         <h1>Pie & Doughnut</h1>
         <?php
-        echo $Pie . $Doughnut
+        echo HugoHeneault\ChartJS\SimpleFactory::createDoughnut($values,$labels,250,250);
+        echo HugoHeneault\ChartJS\SimpleFactory::createPie($values,$labels,250,250);
+        ?>
+
+        <h1>Bubble</h1>
+        <?php
+        echo HugoHeneault\ChartJS\SimpleFactory::createBubble($values,$labels,250,250)
         ?>
         <script src="Chart.js"></script>
         <script src="chart.js-php.js"></script>
-        <script>
-            ( function () {
-                loadChartJsPhp ();
-            } ) ();
-        </script>
     </body>
 </html>
