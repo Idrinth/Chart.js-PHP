@@ -2,58 +2,22 @@
 
 namespace HugoHeneault\ChartJS\Lists;
 
-class Attribute implements \Iterator, \ArrayAccess {
+class Attribute extends BaseArrayAccess {
     /**
      *
      * @var \HugoHeneault\ChartJS\Models\Attribute[]
      */
-    protected $attributes = array();
-    /**
-     *
-     * @var string[]
-     */
-    protected $attributeKeys = array();
-    /**
-     *
-     * @var int
-     */
-    protected $current;
+    protected $list = array();
     /**
      *
      * @return string
      */
     public function __toString() {
         $attributes = '';
-        foreach($this->attributes as $attribute) {
+        foreach($this->list as $attribute) {
             $attributes .= ' ' . $attribute->__toString();
         }
         return $attributes;
-    }
-    /**
-     *
-     * @return \HugoHeneault\ChartJS\Models\Attribute
-     */
-    public function current() {
-        return $this->attributes[$this->key()];
-    }
-    /**
-     * @return string
-     */
-    public function key() {
-        return $this->attributeKeys[$this->current];
-    }
-    /**
-     * @return void
-     */
-    public function next() {
-        $this->current+=1;
-    }
-    /**
-     *
-     * @param string $offset
-     */
-    public function offsetExists($offset) {
-        return isset($this->attributes[$offset]);
     }
     /**
      *
@@ -61,48 +25,20 @@ class Attribute implements \Iterator, \ArrayAccess {
      * @return \HugoHeneault\ChartJS\Models\Attribute
      */
     public function offsetGet($offset) {
-        return $this->attributes[$offset];
-    }
-    /**
-     *
-     * @param string $offset
-     * @param \HugoHeneault\ChartJS\Models\Attribute $value
-     */
-    public function offsetSet($offset,$value) {
-        if(!($value instanceof \HugoHeneault\ChartJS\Models\Attribute)) {
-            throw new \InvalidArgumentException("Values must be of type \HugoHeneault\ChartJS\Models\Attribute, " . get_class($value) . " given.");
-        }
-        $this->attributes[$offset] = $value;
-        if(!in_array($offset,$this->attributeKeys)) {
-            $this->attributeKeys[] = $offset;
-        }
+        return parent::offsetGet($offset);
     }
     /**
      *
      * @param \HugoHeneault\ChartJS\Models\Attribute $attribute
      */
-    public function add(\HugoHeneault\ChartJS\Models\Attribute $attribute) {
+    protected function addNew($attribute) {
         $this->offsetSet($attribute->getName(),$attribute);
     }
     /**
      *
-     * @param string $offset
+     * @return string
      */
-    public function offsetUnset($offset) {
-        unset($this->attributes[$offset]);
-        unset($this->attributeKeys[array_keys($this->attributeKeys,$offset)[0]]);
-    }
-    /**
-     * @return void
-     */
-    public function rewind() {
-        $this->current = 0;
-    }
-    /**
-     *
-     * @return boolean
-     */
-    public function valid() {
-        return $this->current >= 0 && $this->current < count($this->attributeKeys);
+    protected function getAllowedObjectType() {
+        return '\HugoHeneault\ChartJS\Models\Attribute';
     }
 }
