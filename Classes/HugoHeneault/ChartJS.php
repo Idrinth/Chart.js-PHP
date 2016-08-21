@@ -22,6 +22,7 @@ class ChartJS {
                 )
                 )
         );
+        $this->attributes->add(new ChartJS\Models\Attribute("id",uniqid('chartjs_',true)));
     }
     /**
      *
@@ -35,6 +36,6 @@ class ChartJS {
      * @return string
      */
     public function __toString() {
-        return '<div class="hugoheneault-chartjs-wrapper" style="width:' . ($this->attributes->offsetExists('width')?$this->attributes->offsetGet('width')->getValue():'100%') . ';height:' . ($this->attributes->offsetExists('height')?$this->attributes->offsetGet('height')->getValue():'auto') . ';overflow:hidden;"><canvas id="' . uniqid('chartjs_',true) . '"' . $this->attributes->__toString() . '></canvas></div>';
+        return '<div class="hugoheneault-chartjs-wrapper"><canvas' . $this->attributes->__toString() . '></canvas></div>';
     }
 }

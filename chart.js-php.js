@@ -10,7 +10,20 @@ var ChartJSPHP = {
         // Looping every canvas
         for (var counter = 0; counter < elements.length; counter++)
         {
-            ChartJSPHP.charts[elements[counter].id] = new Chart ( elements[counter].getContext ( '2d' ), JSON.parse ( elements[counter].dataset.chartjs ) );
+            try {
+                var style = "overflow:hidden;";
+                if ( elements[counter].getAttribute ( 'height' ) ) {
+                    style += "height:" + elements[counter].getAttribute ( 'height' ) + ";";
+                }
+                if ( elements[counter].getAttribute ( 'width' ) ) {
+                    style += "width:" + elements[counter].getAttribute ( 'width' ) + ";";
+                }
+                //setting configured boundaries
+                elements[counter].parentNode.setAttribute ( "style", style );
+                ChartJSPHP.charts[elements[counter].id] = new Chart ( elements[counter].getContext ( '2d' ), JSON.parse ( elements[counter].dataset.chartjs ) );
+            } catch ( e ) {
+                console.log ( e );
+            }
         }
         delete ChartJSPHP.start;//cleanup
     }
