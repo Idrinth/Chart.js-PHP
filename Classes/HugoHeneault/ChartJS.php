@@ -13,12 +13,12 @@ class ChartJS {
      * @param string[] $labels
      * @param array $options
      */
-    public function __construct(\HugoHeneault\ChartJS\Lists\Dataset $datasets,array $labels,$options = null) {
+    public function __construct(\HugoHeneault\ChartJS\Lists\Dataset $datasets,array $labels,ChartJS\Lists\Options $options = null) {
         $this->attributes = new ChartJS\Lists\Attribute();
         $this->attributes->add(
                 new ChartJS\Models\Attribute(
                 "data-chartjs",json_encode(
-                        array('type' => $datasets->getType(),'options' => $options?$options:new \stdClass(),'data' => array("datasets" => $datasets,"labels" => $labels)),JSON_NUMERIC_CHECK
+                        array('type' => $datasets->getType(),'options' => $options?$options:new \HugoHeneault\ChartJS\Lists\Options(),'data' => array("datasets" => $datasets,"labels" => $labels)),JSON_NUMERIC_CHECK
                 )
                 )
         );
