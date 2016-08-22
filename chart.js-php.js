@@ -12,11 +12,13 @@ var ChartJSPHP = {
         {
             try {
                 var style = "overflow:hidden;";
-                if ( elements[counter].getAttribute ( 'height' ) ) {
-                    style += "height:" + elements[counter].getAttribute ( 'height' ) + ";";
-                }
-                if ( elements[counter].getAttribute ( 'width' ) ) {
-                    style += "width:" + elements[counter].getAttribute ( 'width' ) + ";";
+                var defaults = {
+                    height: 'auto',
+                    width: '100%'
+                };
+                for (var key in defaults) {
+                    var val = elements[counter].getAttribute ( key );
+                    style += key + ":" + ( val ? val : defaults[key] ) + ";";
                 }
                 //setting configured boundaries
                 elements[counter].parentNode.setAttribute ( "style", style );
