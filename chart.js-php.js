@@ -8,7 +8,9 @@ var ChartJSPHP = {
         // Getting all chart.js canvas
         var elements = document.querySelectorAll ( "canvas[data-chartjs]" );
         // Looping every canvas
-        for (var counter = 0; counter < elements.length; counter++)
+        for ( var counter = 0;
+                counter < elements.length;
+                counter++ )
         {
             try {
                 var style = "overflow:hidden;";
@@ -16,7 +18,7 @@ var ChartJSPHP = {
                     height: 'auto',
                     width: '100%'
                 };
-                for (var key in defaults) {
+                for ( var key in defaults ) {
                     var val = elements[counter].getAttribute ( key );
                     style += key + ":" + ( val ? val : defaults[key] ) + ";";
                 }

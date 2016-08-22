@@ -3,12 +3,13 @@
 namespace HugoHeneault\ChartJS\Models\Datasets;
 
 class Radar extends \HugoHeneault\ChartJS\Models\Dataset {
+
     /**
      *
      * @return string[]
      */
-    protected function getColorFields() {
-        return array(
+    protected function getColorFields () {
+        return array (
             "border",
             "background",
             "pointBorder",
@@ -17,4 +18,5 @@ class Radar extends \HugoHeneault\ChartJS\Models\Dataset {
             "pointHoverBorder"
         );
     }
+
 }
